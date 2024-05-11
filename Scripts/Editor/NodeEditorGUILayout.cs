@@ -24,7 +24,7 @@ namespace XNodeEditor {
             if (property == null) throw new NullReferenceException();
             XNode.Node node = property.serializedObject.targetObject as XNode.Node;
             XNode.NodePort port = node.GetPort(property.name);
-            PropertyField(property, label, port, includeChildren);
+            PropertyField(property, label, port, includeChildren, options);
         }
 
         /// <summary> Make a field for a serialized property. Manual node port override. </summary>
@@ -86,17 +86,17 @@ namespace XNodeEditor {
                     switch (showBacking) {
                         case XNode.Node.ShowBackingValue.Unconnected:
                             // Display a label if port is connected
-                            if (port.IsConnected) EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip));
+                            if (port.IsConnected) EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip), options.Append(GUILayout.MinWidth(30)).ToArray());
                             // Display an editable property field if port is not connected
-                            else EditorGUILayout.PropertyField(property, label, includeChildren, GUILayout.MinWidth(30));
+                            else EditorGUILayout.PropertyField(property, label, includeChildren, options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                         case XNode.Node.ShowBackingValue.Never:
                             // Display a label
-                            EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip));
+                            EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip), options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                         case XNode.Node.ShowBackingValue.Always:
                             // Display an editable property field
-                            EditorGUILayout.PropertyField(property, label, includeChildren, GUILayout.MinWidth(30));
+                            EditorGUILayout.PropertyField(property, label, includeChildren, options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                     }
 
@@ -148,15 +148,15 @@ namespace XNodeEditor {
                             // Display a label if port is connected
                             if (port.IsConnected) EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip), NodeEditorResources.OutputPort, GUILayout.MinWidth(30));
                             // Display an editable property field if port is not connected
-                            else EditorGUILayout.PropertyField(property, label, includeChildren, GUILayout.MinWidth(30));
+                            else EditorGUILayout.PropertyField(property, label, includeChildren, options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                         case XNode.Node.ShowBackingValue.Never:
                             // Display a label
-                            EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip), NodeEditorResources.OutputPort, GUILayout.MinWidth(30));
+                            EditorGUILayout.LabelField(label != null ? label : new GUIContent(property.displayName, tooltip), NodeEditorResources.OutputPort, options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                         case XNode.Node.ShowBackingValue.Always:
                             // Display an editable property field
-                            EditorGUILayout.PropertyField(property, label, includeChildren, GUILayout.MinWidth(30));
+                            EditorGUILayout.PropertyField(property, label, includeChildren, options.Append(GUILayout.MinWidth(30)).ToArray());
                             break;
                     }
 
@@ -165,6 +165,7 @@ namespace XNodeEditor {
                     rect.position = rect.position + new Vector2(rect.width, spacePadding);
                 }
 
+                rect.y += (rect.height - 16.0f) * 0.5f;
                 rect.size = new Vector2(16, 16);
 
                 Color backgroundColor = NodeEditorWindow.current.graphEditor.GetPortBackgroundColor(port);
